@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Message Board</title>
+  {% load staticfiles %}
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/bootstrap-theme.min.css' %}">
+  <script src="{% static 'js/bootstrap.js' %}"></script>
+</head>
+<body>
+  <nav>
+    <ul class="nav nav-tabs">
+      <li role="presentation">
+        <a href="{% url 'home' %}">Home</a>
+      </li>
+      <li role="presentation">
+        <a href="{% url 'edit' %}">Profile</a>
+      </li>
+      <li role="presentation">
+        <a href="{% url 'logout' %}">Logout</a>
+      </li>
+    </ul>
+  </nav>
+  <div class="container">
+    <h1>{{user.user.first_name}} {{user.user.last_name}}</h1>
+    <p>Registered at: {{user.user.created_at}}</p>
+    <p>User ID: {{user.user.id}}</p>
+    <p>Email address: {{user.user.email}}</p>
+    <p>Description: {{user.user.description}}</p>
+  <div class="row">
+    <div class="col-md-8">
+      <h2>Leave a message for {{user.user.first_name}}</h2>
+      
+        <p class="text-warning"> {{ message }}</p>
+
+      <form action="{% url 'createMessage' id=user.user.id %}" method='Post'>
+      {% csrf_token %}
+        <div class='form-group'>
+          <textarea class="form-control" rows="5" name="message"></textarea>
+        </div>
+        <button type="submit" class="btn btn-default">Post Message</button>
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-5">
+      <p>
+        {% for userMessage in userMessages %}
+          <hr>
+            <p>{{userMessage.message}}</p>
+            <p>{{userMessage.message_leaver.first_name}} {{userMessage.message_leaver.last_name}} - {{userMessage.created_at}}</p>
+            <form action = "{% url 'createComment' id=userMessage.id %}" method='Post'>
+              {% csrf_token %}
+              <div class="form-group">
+                <textarea class="form-control" rows="3" name="comment"></textarea>
+                <input type="hidden" name="board_id" value="{{user.user.id}}">
+              </div>
+              <button type="submit" class="btn btn-default">Post Comment</button>
+            </form>
+            {% for userComment in userComments %}
+            {% if userMessage.id == userComment.attached_to_message.id %}
+            <div class='comment' style="margin-left:50px;margin-top:20px;">
+              <p>{{userComment.comment}}</p>
+              <p>{{userComment.comment_leaver.first_name}} {{userComment.comment_leaver.last_name}} - {{userComment.created_at}}</p>
+            </div>
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
+      </p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

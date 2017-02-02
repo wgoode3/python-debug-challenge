@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Welcome to the Dashboard</title>
+  {% load staticfiles %}
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/bootstrap-theme-min.css' %}">
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <style>
+    .jumbotron{
+      margin-top: 30px
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul class="nav nav-tabs">
+      <li role="presentation" class="active">
+        <a href="{% url 'home' %}">Home</a>
+      </li>
+      <li role="presentation">
+        <a href="{% url 'login' %}">Login</a>
+      </li>
+      <li role="presentation">
+        <a href="{% url 'register' %}">Register</a>
+      </li>
+      <li role="presentation">
+        <a href="{% url 'logout' %}">Logout</a>
+      </li>
+    </ul>
+  </nav>
+<div class="container">
+  <div class="jumbotron">
+      <div class="row">
+        <div class="col-md-6">
+          <h1>User Dashboard</h1>
+          <p>Register, Login, leave a message or a comment.</p>
+          {% if 'user_id' in request.session %}
+            <p><a class="btn btn-primary btn-lg" href="/panel" role="button">Start</a></p>
+          {% else %}
+            <p><a class="btn btn-primary btn-lg" href="/login" role="button">Start</a></p>
+          {% endif %}
+        </div>
+      </div>
+  </div>
+</div>
+</body>
+</html>
